@@ -2,6 +2,7 @@
 %-----------------------------------------------------------------------------------------------------------------------------------------------%
 %	The MIT License (MIT)
 %
+%
 %	Copyright (c) 2019 Jan Küster
 %
 %	Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -87,7 +88,7 @@
 
 % icon shortcut
 \newcommand{\icon}[2] { 							
-	\makebox(#2, #2){\textcolor{maincol}{\textcolor{maincol}{\faIcon{#1}}}}
+	\makebox(#2, #2){\textcolor{accentcol}{\textcolor{accentcol}{\faIcon{#1}}}}
 }	
 
 
@@ -174,12 +175,12 @@ $if(csl-refs)$
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
+\setlength{\csllabelwidth}{1.5em}
 \newlength{\cslentryspacingunit} % times entry-spacing
 \setlength{\cslentryspacingunit}{\parskip}
 \newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+ {% indent a smidge so the numbers line up under the heading
+  \setlength{\parindent}{3mm}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
   \let\oldpar\par
@@ -219,6 +220,7 @@ $endif$
 
 % primary color
 \definecolor{maincol}{HTML}{$cvcolor.main$}
+\definecolor{altcol}{HTML}{$cvcolor.alt$}
 
 % accent color, secondary
 % \definecolor{accentcol}{RGB}{ 250, 150, 10 }
@@ -357,7 +359,11 @@ $endif$
 	% if you need more control on page breaks, remove the parbox
 	\parbox{\mpwidth}{
 		\begin{tabular*}{1\mpwidth}{p{0.66\mpwidth}  r}
-	 		\textcolor{black}{\textbf{#2}} & \colorbox{accentcol}{\makebox[0.32\mpwidth]{\textcolor{white}{\textbf{#1}}}} \\
+		  \ifthenelse{\isempty{#1}}{
+	 		  \textcolor{black}{\textbf{#2}} & \colorbox{white}{\makebox[0.32\mpwidth]{\textcolor{white}{\textbf{#1}}}} \\
+		  }{
+	 		  \textcolor{black}{\textbf{#2}} & \colorbox{accentcol}{\makebox[0.32\mpwidth]{\textcolor{white}{\textbf{#1}}}} \\
+	 		}
 			\textcolor{maincol}{#3} & \\
 		\end{tabular*}\\[8pt]
 	
@@ -467,7 +473,7 @@ $endif$
 
 % LEBENSLAUF HIERE
 \AtBeginShipoutFirst{\Header{CV}\Footer{1}}
-\AtBeginShipout{\AtBeginShipoutAddToBox{\Header{CV}\Footer{2}}}
+\AtBeginShipout{\AtBeginShipoutAddToBox{\Header{$title$}\Footer{2}}}
 
 \newpage
 
@@ -482,7 +488,7 @@ $endif$
 		%----------------------------------------------------------------------------------------
 		\includegraphics[width=\linewidth]{$sidebar.image$}
 		\fcolorbox{white}{white}{\begin{minipage}[c][1.5cm][c]{1\mpwidth}
-				\LARGE{\textbf{\textcolor{maincol}{$author$}}} \\[2pt]
+				\LARGE{\textbf{\textcolor{altcol}{$author$}}} \\[2pt]
 				\normalsize{ \textcolor{maincol} {$jobtitle$} }
 			\end{minipage}}
 
@@ -490,7 +496,7 @@ $endif$
 		%	META SKILLS
 		%----------------------------------------------------------------------------------------
 		$for(sidebar.bullets)$
-		\icontext{caret-right}{12}{$it$}\\[6pt]
+		\textbullet\hspace{5pt}{\large $it$}\\[6pt]
 		$endfor$
 
 		$for(sidebar.sections)$
@@ -506,6 +512,8 @@ $endif$
 		\iconhref{$sidebar.sections.items.icon$}{16}{$sidebar.sections.items.text$}{$sidebar.sections.items.href$}\\[6pt]
 		$elseif(sidebar.sections.items.icon)$
 		\icontext{$sidebar.sections.items.icon$}{16}{$sidebar.sections.items.text$}\\[6pt]
+		$elseif(sidebar.sections.items.exposition)$
+		\cvtext{$sidebar.sections.items.p1$}\vskip 0.5cm \cvtext{$sidebar.sections.items.p2$}
 		$else$
 		\icontext{caret-right}{12}{$it$}\\[6pt]
 		$endif$
